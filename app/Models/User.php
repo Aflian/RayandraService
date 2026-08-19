@@ -5,6 +5,8 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Enums\UserRole;
 use Database\Factories\UserFactory;
+use Filament\Models\Contracts\FilamentUser;
+use Filament\Panel;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -15,10 +17,21 @@ use Illuminate\Notifications\Notifiable;
 
 #[Fillable(['name', 'email', 'phone', 'password', 'avatar', 'role'])]
 #[Hidden(['password', 'remember_token'])]
-class User extends Authenticatable
+class User extends Authenticatable implements FilamentUser
 {
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
+
+    public function canAccessPanel(Panel $panel): bool
+    {
+        return match ($panel->getId()) {
+            'admin' => in_array($this->role, [UserRole::Admin, UserRole::SuperAdmin], true),
+            'workspace' => $this->role === UserRole::Workspace,
+            'customer' => $this->role === UserRole::CustomerDigital,
+            'invitation' => $this->role === UserRole::CustomerInvitation,
+            default => false,
+        };
+    }
 
     public function workspaces(): BelongsToMany
     {
@@ -30,9 +43,14 @@ class User extends Authenticatable
         return $this->hasMany(Order::class);
     }
 
-    public function isAdmin(): bool
+    public function getHomeUrl(): string
     {
-        return in_array($this->role, [UserRole::Admin, UserRole::SuperAdmin], true);
+        return match ($this->role) {
+            UserRole::Admin, UserRole::SuperAdmin => '/admin',
+            UserRole::Workspace => '/workspace',
+            UserRole::CustomerDigital => '/customer',
+            UserRole::CustomerInvitation => '/invitation',
+        };
     }
 
     protected function casts(): array
