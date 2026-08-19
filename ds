@@ -1,0 +1,17 @@
+[33mcommit 86fb36d381bc2d2e3288cd4bf4dba476012b036b[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m
+Author: Rayandra Dev <dev@rayandra.id>
+Date:   Wed Aug 19 19:12:39 2026 +0700
+
+    pembaharuan layout
+
+[33mcommit f23e17ebe05ffe9ea239e122d726971abe543cbf[m
+Author: Rayandra Dev <dev@rayandra.id>
+Date:   Wed Aug 19 18:34:32 2026 +0700
+
+    first commit
+
+[33mcommit c36471dc58b468a54a16cb4978e9b8bcc7582d02[m
+Author: Rayandra Dev <dev@rayandra.id>
+Date:   Tue Aug 18 20:08:17 2026 +0700
+
+    init: default Laravel 13 project
